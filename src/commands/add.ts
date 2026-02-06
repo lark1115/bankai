@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import input from "@inquirer/input";
-import { AgentDefSchema } from "../registry/types.js";
+import { CustomAgentDefSchema } from "../registry/types.js";
 import { addAgent } from "../registry/custom.js";
 
 interface AddOpts {
@@ -40,7 +40,7 @@ export async function addAgentCommand(opts: AddOpts): Promise<void> {
     return;
   }
 
-  const agent = AgentDefSchema.parse({
+  const agent = CustomAgentDefSchema.parse({
     cmd,
     displayName: displayName || undefined,
     lines,

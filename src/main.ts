@@ -20,7 +20,7 @@ program
   .action(async (cmd: string | undefined, opts: { agent?: string }) => {
     const target = cmd || opts.agent;
     if (target) {
-      printAgent(target);
+      await printAgent(target);
     } else {
       await selectAgent();
     }

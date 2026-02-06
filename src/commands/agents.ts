@@ -17,7 +17,15 @@ export function listAgents(opts: { installed?: boolean }): void {
     const name = agent.displayName
       ? `${chalk.bold(agent.cmd)} ${chalk.dim(`(${agent.displayName})`)}`
       : chalk.bold(agent.cmd);
-    const lines = agent.lines.map((l) => chalk.green(l)).join(", ");
-    console.log(`  ${name}  →  ${lines}`);
+
+    if (agent.type === "settings") {
+      const targets = agent.targets
+        .map((t) => t.description ?? t.kind)
+        .join(", ");
+      console.log(`  ${name}  →  ${chalk.magenta(`[settings: ${targets}]`)}`);
+    } else {
+      const lines = agent.lines.map((l) => chalk.green(l)).join(", ");
+      console.log(`  ${name}  →  ${lines}`);
+    }
   }
 }
