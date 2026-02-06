@@ -14,13 +14,13 @@ export const builtinAgents: AgentDef[] = [
   {
     cmd: "gemini",
     displayName: "Gemini CLI",
-    lines: ["gemini -s"],
+    lines: ["gemini --yolo"],
     cmdAliases: ["gemini-cli"],
   },
   {
     cmd: "openhands",
     displayName: "OpenHands",
-    lines: ["openhands --no-confirm"],
+    lines: ["openhands --always-approve"],
   },
   {
     cmd: "aider",
