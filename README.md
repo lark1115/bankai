@@ -28,15 +28,25 @@ bankai agents --installed
 
 ## Supported Agents
 
+### CLI Agents (flag output)
+
 | Agent | Command | Docs |
 |-------|---------|------|
 | Claude Code | `claude --dangerously-skip-permissions` | [Settings - Claude Code Docs](https://code.claude.com/docs/en/settings) |
 | Codex CLI | `codex --dangerously-bypass-approvals-and-sandbox` | [CLI Reference - OpenAI Codex](https://developers.openai.com/codex/cli/reference/) |
+| GitHub Copilot CLI | `copilot --allow-all-tools` | [Copilot CLI Docs](https://docs.github.com/en/copilot) |
 | Gemini CLI | `gemini --yolo` | [Configuration - Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/docs/get-started/configuration.md) |
 | OpenHands | `openhands --always-approve` | [CLI Mode - OpenHands Docs](https://docs.openhands.dev/openhands/usage/run-openhands/cli-mode) |
 | Aider | `aider --yes-always` | [Options Reference - aider](https://aider.chat/docs/config/options.html) |
 | Qwen Code | `qwen-code --yolo` | [Approval Mode - Qwen Code Docs](https://qwenlm.github.io/qwen-code-docs/en/users/features/approval-mode/) |
 | Kimi Code | `kimi --yolo` | [Interaction Guide - Kimi Code Docs](https://www.kimi.com/code/docs/en/kimi-cli/guides/interaction.html) |
+
+### Settings Agents (config file / DB modification)
+
+| Agent | Target | Description |
+|-------|--------|-------------|
+| Cursor Agent CLI | `.cursor/cli.json` / `~/.cursor/cli-config.json` | Writes permission allow-list for Cursor Agent CLI |
+| Cursor IDE | SQLite DB (`state.vscdb`) | Enables Auto-Run Mode, disables protections (requires restart) |
 
 ## Custom Agents
 

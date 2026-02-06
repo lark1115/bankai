@@ -32,7 +32,7 @@ describe("custom agent I/O", () => {
     const agents = [{ cmd: "test", lines: ["test --go"] }];
     saveCustomAgents(agents, tmpFile);
     const loaded = loadCustomAgents(tmpFile);
-    expect(loaded).toEqual(agents);
+    expect(loaded).toEqual([{ type: "cli", cmd: "test", lines: ["test --go"] }]);
   });
 
   it("addAgent appends a new agent", () => {
