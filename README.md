@@ -35,6 +35,8 @@ bankai agents --installed
 | Gemini CLI | `gemini --yolo` | [Configuration - Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/docs/get-started/configuration.md) |
 | OpenHands | `openhands --always-approve` | [CLI Mode - OpenHands Docs](https://docs.openhands.dev/openhands/usage/run-openhands/cli-mode) |
 | Aider | `aider --yes-always` | [Options Reference - aider](https://aider.chat/docs/config/options.html) |
+| Qwen Code | `qwen-code --yolo` | [Approval Mode - Qwen Code Docs](https://qwenlm.github.io/qwen-code-docs/en/users/features/approval-mode/) |
+| Kimi Code | `kimi --yolo` | [Interaction Guide - Kimi Code Docs](https://www.kimi.com/code/docs/en/kimi-cli/guides/interaction.html) |
 
 ## Custom Agents
 

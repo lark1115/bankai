@@ -27,4 +27,15 @@ export const builtinAgents: AgentDef[] = [
     displayName: "Aider",
     lines: ["aider --yes-always"],
   },
+  {
+    cmd: "qwen",
+    displayName: "Qwen Code",
+    lines: ["qwen-code --yolo"],
+    cmdAliases: ["qwen-code"],
+  },
+  {
+    cmd: "kimi",
+    displayName: "Kimi Code",
+    lines: ["kimi --yolo"],
+  },
 ];
