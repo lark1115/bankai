@@ -9,7 +9,7 @@ export const builtinAgents: AgentDef[] = [
   {
     cmd: "codex",
     displayName: "Codex CLI",
-    lines: ["codex --full-auto"],
+    lines: ["codex --dangerously-bypass-approvals-and-sandbox"],
   },
   {
     cmd: "gemini",

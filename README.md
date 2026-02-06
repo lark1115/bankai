@@ -31,7 +31,7 @@ bankai agents --installed
 | Agent | Command | Docs |
 |-------|---------|------|
 | Claude Code | `claude --dangerously-skip-permissions` | [Settings - Claude Code Docs](https://code.claude.com/docs/en/settings) |
-| Codex CLI | `codex --full-auto` | [CLI Reference - OpenAI Codex](https://developers.openai.com/codex/cli/reference/) |
+| Codex CLI | `codex --dangerously-bypass-approvals-and-sandbox` | [CLI Reference - OpenAI Codex](https://developers.openai.com/codex/cli/reference/) |
 | Gemini CLI | `gemini --yolo` | [Configuration - Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/docs/get-started/configuration.md) |
 | OpenHands | `openhands --always-approve` | [CLI Mode - OpenHands Docs](https://docs.openhands.dev/openhands/usage/run-openhands/cli-mode) |
 | Aider | `aider --yes-always` | [Options Reference - aider](https://aider.chat/docs/config/options.html) |
