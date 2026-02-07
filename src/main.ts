@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name("bankai")
   .description("Launch coding agent CLIs with approval-bypass flags")
-  .version("0.2.0");
+  .version("0.3.0");
 
 // bankai <cmd> — launch a specific agent with bypass flags
 program
