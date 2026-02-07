@@ -52,6 +52,24 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - uses: oven-sh/setup-bun@v2
+        if: steps.version.outputs.changed == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.version.outputs.changed == 'true'
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Build and publish
+        if: steps.version.outputs.changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          bun install
+          bun run build
+          npm publish
+
       - name: Create release
         if: steps.version.outputs.changed == 'true'
         env:
