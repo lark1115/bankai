@@ -11,16 +11,17 @@ const program = new Command();
 program
   .name("bankai")
   .description("Launch coding agent CLIs with approval-bypass flags")
-  .version("0.3.3");
+  .version("0.4.0");
 
-// bankai <cmd> — launch a specific agent with bypass flags
+// bankai <cmd> [args...] — launch a specific agent with bypass flags
 program
   .argument("[cmd]", "agent command to look up")
+  .argument("[args...]", "extra arguments to pass to the agent")
   .option("-a, --agent <cmd>", "agent command to look up (alternative)")
-  .action(async (cmd: string | undefined, opts: { agent?: string }) => {
+  .action(async (cmd: string | undefined, args: string[], opts: { agent?: string }) => {
     const target = cmd || opts.agent;
     if (target) {
-      await runAgent(target);
+      await runAgent(target, args);
     } else {
       await selectAgent();
     }
