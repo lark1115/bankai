@@ -29,6 +29,8 @@ export async function runAgent(cmd: string): Promise<void> {
 
   if (agent.type === "settings") {
     await applySettingsAgent(agent);
+    const code = await execAgent(agent.cmd);
+    process.exitCode = code;
   } else {
     const line = agent.lines[0];
     const code = await execAgent(line);
