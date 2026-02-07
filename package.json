@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsup",
     "dev": "bun run src/main.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@inquirer/confirm": "^6.0.4",
