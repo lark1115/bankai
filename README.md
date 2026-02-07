@@ -44,7 +44,22 @@ bankai agents --installed
 | Agent | Target | Description |
 |-------|--------|-------------|
 | Cursor Agent CLI | `.cursor/cli.json` / `~/.cursor/cli-config.json` | Writes permission allow-list for Cursor Agent CLI |
-| Cursor IDE | SQLite DB (`state.vscdb`) | Enables Auto-Run Mode, disables protections (requires restart) |
+| Cursor IDE | SQLite DB (`state.vscdb`) | Applies settings below, then launches Cursor |
+
+#### Cursor IDE (`bankai cursor`)
+
+Unlike CLI agents that pass a flag, Cursor IDE stores its settings in a SQLite DB. `bankai cursor` modifies the DB directly to apply the following, then opens Cursor:
+
+| Setting | Effect |
+|---------|--------|
+| Auto-Run Mode → Run Everything (Unsandboxed) | Agent runs all commands without sandboxing |
+| Browser Protection → OFF | Agent can run browser tools automatically |
+| MCP Tools Protection → OFF | Agent can run MCP tools automatically |
+| File-Deletion Protection → OFF | Agent can delete files automatically |
+| External-File Protection → OFF | Agent can create/modify files outside the workspace |
+| Dot-files Protection → OFF | Agent can modify dotfiles (.env, etc.) |
+
+Cursor must be restarted after the first apply for changes to take effect.
 
 ## Custom Agents
 
