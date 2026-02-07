@@ -5,14 +5,14 @@ import { addAgentCommand } from "./commands/add.js";
 import { editAgentCommand } from "./commands/edit.js";
 import { removeAgentCommand } from "./commands/remove.js";
 import { selectAgent } from "./commands/select.js";
-import { showShimmer } from "./ui/shimmer.js";
+import { showFade } from "./ui/fade.js";
 
 const program = new Command();
 
 program
   .name("bankai")
   .description("Launch coding agent CLIs with approval-bypass flags")
-  .version("0.5.0");
+  .version("0.6.0");
 
 // bankai <cmd> [args...] — launch a specific agent with bypass flags
 program
@@ -65,10 +65,10 @@ program
     removeAgentCommand(cmd);
   });
 
-// Show shimmer for top-level help
+// Show fade for top-level help
 const args = process.argv.slice(2);
 const isTopLevelHelp = args.length <= 1 && (args.includes("--help") || args.includes("-h"));
-if (isTopLevelHelp) await showShimmer();
+if (isTopLevelHelp) await showFade();
 
 program.parseAsync().catch((err) => {
   if (err?.name === "ExitPromptError") {

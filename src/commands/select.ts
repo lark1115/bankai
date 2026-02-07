@@ -3,10 +3,10 @@ import select from "@inquirer/select";
 import { resolveAll } from "../registry/resolve.js";
 import { filterInstalled } from "../detect.js";
 import { runAgent } from "./run.js";
-import { showShimmer } from "../ui/shimmer.js";
+import { showFade } from "../ui/fade.js";
 
 export async function selectAgent(): Promise<void> {
-  await showShimmer();
+  await showFade();
   const all = resolveAll();
   const installed = filterInstalled(all);
 

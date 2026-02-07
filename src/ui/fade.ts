@@ -1,34 +1,33 @@
 import chalk from "chalk";
 import { BANKAI_ART } from "./bankai-art.js";
 
-// Color theme: dark blue/purple → white → dark blue/purple
-const BASE_R = 60, BASE_G = 40, BASE_B = 120;   // dark purple
-const PEAK_R = 255, PEAK_G = 255, PEAK_B = 255; // white
+function easeInOut(x: number): number {
+  return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+}
 
-function lerp(a: number, b: number, t: number): number {
-  return Math.round(a + (b - a) * t);
+function calculateOpacity(t: number): number {
+  if (t < 0.4) return easeInOut(t / 0.4);
+  if (t < 0.7) return 1.0;
+  return easeInOut(1 - (t - 0.7) / 0.3);
 }
 
 function renderFrame(t: number): string {
+  const opacity = calculateOpacity(t);
   const lines: string[] = [];
+
   for (const row of BANKAI_ART) {
     let line = "";
-    for (let x = 0; x < row.length; x++) {
-      const ch = row[x];
-      if (ch === " ") {
+    for (const ch of row) {
+      if (ch === " " || opacity < 0.05) {
         line += " ";
         continue;
       }
-      // Cosine wave: brightness peaks sweep left-to-right
-      const wave = Math.cos((x / 8) - t * 4) * 0.5 + 0.5; // 0..1
-      const brightness = Math.pow(wave, 3); // sharpen the peak
-      const r = lerp(BASE_R, PEAK_R, brightness);
-      const g = lerp(BASE_G, PEAK_G, brightness);
-      const b = lerp(BASE_B, PEAK_B, brightness);
-      line += chalk.rgb(r, g, b)(ch);
+      const intensity = Math.round(30 + 225 * opacity);
+      line += chalk.rgb(intensity, intensity, intensity)(ch);
     }
     lines.push(line);
   }
+
   return lines.join("\n");
 }
 
@@ -38,14 +37,14 @@ function renderStatic(): string {
   ).join("\n");
 }
 
-export async function showShimmer(): Promise<void> {
+export async function showFade(): Promise<void> {
   // Non-TTY: static one-shot
   if (!process.stdout.isTTY) {
     console.log(renderStatic());
     return;
   }
 
-  const FPS = 30;
+  const FPS = 60;
   const DURATION_MS = 2000;
   const FRAME_MS = Math.round(1000 / FPS);
   const totalFrames = Math.ceil(DURATION_MS / FRAME_MS);
@@ -77,7 +76,7 @@ export async function showShimmer(): Promise<void> {
       await new Promise((resolve) => setTimeout(resolve, FRAME_MS));
     }
 
-    // Final frame: bright static
+    // Final frame: fully faded
     process.stdout.write(`\x1b[${artHeight}A`);
     process.stdout.write(renderFrame(1) + "\n");
 
