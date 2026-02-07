@@ -28,3 +28,36 @@ jobs:
       - run: npx tsc --noEmit
 
       - run: bun run test
+
+  auto-release:
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check version diff
+        id: version
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+          if [ "$LATEST_TAG" = "none" ] || [ "$LATEST_TAG" != "v${CURRENT}" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "version=${CURRENT}" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create release
+        if: steps.version.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          git tag "v${VERSION}"
+          git push origin "v${VERSION}"
+          gh release create "v${VERSION}" --generate-notes
