@@ -9,7 +9,9 @@ CLI tool that launches coding agent CLIs with approval-bypass flags.
 ## Install
 
 ```bash
-bun install -g bankai-cli
+npm install -g bankai-cli
+# or: pnpm add -g bankai-cli
+# or: bun install -g bankai-cli
 ```
 
 ## Usage
