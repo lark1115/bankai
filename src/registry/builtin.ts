@@ -111,6 +111,8 @@ export const builtinAgents: AgentDef[] = [
           playwrightProtection: false,
           yoloDotFilesDisabled: false,
           yoloOutsideWorkspaceDisabled: false,
+          yoloDeleteFileDisabled: false,
+          yoloMcpToolsDisabled: false,
         },
         modes4Patch: {
           id: "agent",
