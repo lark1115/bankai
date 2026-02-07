@@ -1,6 +1,15 @@
 {
   "name": "bankai-cli",
-  "version": "0.3.2",
+  "version": "0.3.3",
+  "description": "Launch coding agent CLIs with approval-bypass flags",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lark1115/bankai.git"
+  },
+  "homepage": "https://github.com/lark1115/bankai",
+  "bugs": "https://github.com/lark1115/bankai/issues",
+  "keywords": ["cli", "coding-agent", "bypass", "claude", "cursor", "codex", "gemini"],
+  "license": "MIT",
   "type": "module",
   "files": ["dist", "README.md"],
   "bin": {
