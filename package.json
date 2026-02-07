@@ -1,6 +1,6 @@
 {
   "name": "bankai-cli",
-  "version": "0.6.9",
+  "version": "0.6.10",
   "description": "Launch coding agent CLIs with approval-bypass flags",
   "repository": {
     "type": "git",

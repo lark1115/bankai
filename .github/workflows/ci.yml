@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   ci:
@@ -28,6 +28,14 @@ jobs:
       - run: npx tsc --noEmit
 
       - run: bun run test
+
+  enforce-source-branch:
+    if: github.event_name == 'pull_request' && github.base_ref == 'main' && github.head_ref != 'develop'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error::PRs to main must come from develop"
+          exit 1
 
   auto-release:
     needs: ci
