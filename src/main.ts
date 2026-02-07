@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { printAgent } from "./commands/print.js";
+import { runAgent } from "./commands/run.js";
 import { listAgents } from "./commands/agents.js";
 import { addAgentCommand } from "./commands/add.js";
 import { editAgentCommand } from "./commands/edit.js";
@@ -10,17 +10,17 @@ const program = new Command();
 
 program
   .name("bankai")
-  .description("Print approval-bypass startup commands for coding agent CLIs")
+  .description("Launch coding agent CLIs with approval-bypass flags")
   .version("0.2.0");
 
-// bankai <cmd> — print bypass command for a specific agent
+// bankai <cmd> — launch a specific agent with bypass flags
 program
   .argument("[cmd]", "agent command to look up")
   .option("-a, --agent <cmd>", "agent command to look up (alternative)")
   .action(async (cmd: string | undefined, opts: { agent?: string }) => {
     const target = cmd || opts.agent;
     if (target) {
-      await printAgent(target);
+      await runAgent(target);
     } else {
       await selectAgent();
     }

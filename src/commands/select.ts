@@ -2,8 +2,7 @@ import chalk from "chalk";
 import select from "@inquirer/select";
 import { resolveAll } from "../registry/resolve.js";
 import { filterInstalled } from "../detect.js";
-import { formatOutput } from "../format.js";
-import { applySettingsAgent } from "./apply.js";
+import { runAgent } from "./run.js";
 
 export async function selectAgent(): Promise<void> {
   const all = resolveAll();
@@ -25,13 +24,5 @@ export async function selectAgent(): Promise<void> {
     })),
   });
 
-  const agent = agents.find((a) => a.cmd === chosen);
-  if (agent) {
-    console.log();
-    if (agent.type === "settings") {
-      await applySettingsAgent(agent);
-    } else {
-      console.log(formatOutput(agent));
-    }
-  }
+  await runAgent(chosen);
 }
