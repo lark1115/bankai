@@ -1,8 +1,6 @@
 # bankai
 
-CLI tool that prints approval-bypass startup commands for coding agent CLIs.
-
-bankai does **not** execute the agents — it only outputs the commands for copy-paste.
+CLI tool that launches coding agent CLIs with approval-bypass flags.
 
 ## Install
 
@@ -13,7 +11,7 @@ bun install -g bankai-cli
 ## Usage
 
 ```bash
-# Print bypass command for a specific agent
+# Launch a specific agent with bypass flags
 bankai claude
 
 # Interactive agent picker
