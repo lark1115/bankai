@@ -3,10 +3,10 @@ import chalk from "chalk";
 import { resolveAgent } from "../registry/resolve.js";
 import { applySettingsAgent } from "./apply.js";
 
-function execAgent(line: string): Promise<number> {
+function execAgent(line: string, extraArgs: string[] = []): Promise<number> {
   const [cmd, ...args] = line.split(/\s+/);
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { stdio: "inherit", shell: true });
+    const child = spawn(cmd, [...args, ...extraArgs], { stdio: "inherit", shell: true });
     child.on("close", (code) => resolve(code ?? 1));
     child.on("error", (err) => {
       console.error(chalk.red(`Failed to start: ${err.message}`));
@@ -15,7 +15,7 @@ function execAgent(line: string): Promise<number> {
   });
 }
 
-export async function runAgent(cmd: string): Promise<void> {
+export async function runAgent(cmd: string, extraArgs: string[] = []): Promise<void> {
   const agent = resolveAgent(cmd);
   if (!agent) {
     console.error(
@@ -29,11 +29,11 @@ export async function runAgent(cmd: string): Promise<void> {
 
   if (agent.type === "settings") {
     await applySettingsAgent(agent);
-    const code = await execAgent(agent.cmd);
+    const code = await execAgent(agent.cmd, extraArgs);
     process.exitCode = code;
   } else {
     const line = agent.lines[0];
-    const code = await execAgent(line);
+    const code = await execAgent(line, extraArgs);
     process.exitCode = code;
   }
 }
