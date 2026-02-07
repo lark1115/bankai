@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name("bankai")
   .description("Launch coding agent CLIs with approval-bypass flags")
-  .version("0.4.0");
+  .version("0.4.1");
 
 // bankai <cmd> [args...] — launch a specific agent with bypass flags
 program
@@ -64,4 +64,9 @@ program
     removeAgentCommand(cmd);
   });
 
-program.parse();
+program.parseAsync().catch((err) => {
+  if (err?.name === "ExitPromptError") {
+    process.exit(130);
+  }
+  throw err;
+});
