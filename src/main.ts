@@ -5,6 +5,7 @@ import { addAgentCommand } from "./commands/add.js";
 import { editAgentCommand } from "./commands/edit.js";
 import { removeAgentCommand } from "./commands/remove.js";
 import { selectAgent } from "./commands/select.js";
+import { showShimmer } from "./ui/shimmer.js";
 
 const program = new Command();
 
@@ -63,6 +64,11 @@ program
   .action((cmd: string) => {
     removeAgentCommand(cmd);
   });
+
+// Show shimmer for top-level help
+const args = process.argv.slice(2);
+const isTopLevelHelp = args.length <= 1 && (args.includes("--help") || args.includes("-h"));
+if (isTopLevelHelp) await showShimmer();
 
 program.parseAsync().catch((err) => {
   if (err?.name === "ExitPromptError") {
