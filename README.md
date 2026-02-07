@@ -2,6 +2,10 @@
 
 CLI tool that launches coding agent CLIs with approval-bypass flags.
 
+## Requirements
+
+- Node.js >= 20.12.0
+
 ## Install
 
 ```bash
