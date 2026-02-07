@@ -1,4 +1,5 @@
 import { Command } from "commander";
+import { createRequire } from "node:module";
 import { runAgent } from "./commands/run.js";
 import { listAgents } from "./commands/agents.js";
 import { addAgentCommand } from "./commands/add.js";
@@ -7,12 +8,15 @@ import { removeAgentCommand } from "./commands/remove.js";
 import { selectAgent } from "./commands/select.js";
 import { showFade } from "./ui/fade.js";
 
+const require = createRequire(import.meta.url);
+const { version } = require("../package.json");
+
 const program = new Command();
 
 program
   .name("bankai")
   .description("Launch coding agent CLIs with approval-bypass flags")
-  .version("0.6.0");
+  .version(version);
 
 // bankai <cmd> [args...] — launch a specific agent with bypass flags
 program
