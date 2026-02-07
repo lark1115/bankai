@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name("bankai")
   .description("Print approval-bypass startup commands for coding agent CLIs")
-  .version("0.1.0");
+  .version("0.2.0");
 
 // bankai <cmd> — print bypass command for a specific agent
 program
