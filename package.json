@@ -38,7 +38,7 @@
   "dependencies": {
     "@inquirer/confirm": "^6.0.4",
     "@inquirer/input": "^4.1.0",
-    "@inquirer/select": "^4.1.0",
+    "@inquirer/select": "^5.0.4",
     "better-sqlite3": "^12.6.2",
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
