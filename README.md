@@ -23,6 +23,12 @@
 
 ```
 
+[![npm version](https://img.shields.io/npm/v/bankai-cli)](https://www.npmjs.com/package/bankai-cli)
+[![CI](https://github.com/lark1115/bankai/actions/workflows/ci.yml/badge.svg)](https://github.com/lark1115/bankai/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D20.12.0-brightgreen)](https://nodejs.org/)
+[![Open in Visual Studio Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://open.vscode.dev/lark1115/bankai)
+
 CLI tool that launches coding agent CLIs with approval-bypass flags.
 
 ## Requirements
