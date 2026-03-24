@@ -23,7 +23,7 @@ export const builtinAgents: AgentDef[] = [
     type: "cli",
     cmd: "gemini",
     displayName: "Gemini CLI",
-    lines: ["gemini --yolo"],
+    lines: ["gemini --yolo --sandbox=false"],
     cmdAliases: ["gemini-cli"],
   },
   {
@@ -52,9 +52,17 @@ export const builtinAgents: AgentDef[] = [
     lines: ["kimi --yolo"],
   },
   {
+    type: "cli",
+    cmd: "opencode",
+    displayName: "OpenCode",
+    lines: ["OPENCODE_YOLO=true opencode"],
+    cmdAliases: ["opencode-yolo"],
+  },
+  {
     type: "settings",
     cmd: "cursor-agent",
     displayName: "Cursor Agent CLI",
+    lines: ["cursor-agent --yolo"],
     targets: [
       {
         kind: "json",
@@ -70,6 +78,7 @@ export const builtinAgents: AgentDef[] = [
               "Grep(**)",
               "LS(**)",
             ],
+            deny: [],
           },
         },
         description: "Project (.cursor/cli.json)",
@@ -88,6 +97,7 @@ export const builtinAgents: AgentDef[] = [
               "Grep(**)",
               "LS(**)",
             ],
+            deny: [],
           },
         },
         description: "Global (~/.cursor/cli-config.json)",

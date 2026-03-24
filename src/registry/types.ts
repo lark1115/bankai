@@ -58,6 +58,7 @@ export const SettingsAgentDefSchema = z.object({
   displayName: z.string().optional(),
   cmdAliases: z.array(z.string().min(1)).optional(),
   targets: z.array(SettingsTargetSchema).min(1),
+  lines: z.array(z.string().min(1)).optional(),
 });
 
 export type SettingsAgentDef = z.infer<typeof SettingsAgentDefSchema>;

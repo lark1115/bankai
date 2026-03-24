@@ -49,6 +49,9 @@ npm install -g bankai-cli
 # Launch a specific agent with bypass flags
 bankai claude
 
+# Pass args directly to the target agent
+bankai codex -C /path/to/project
+
 # Interactive agent picker
 bankai
 

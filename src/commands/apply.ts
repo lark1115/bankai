@@ -1,6 +1,4 @@
 import chalk from "chalk";
-import select from "@inquirer/select";
-import confirm from "@inquirer/confirm";
 import type { SettingsAgentDef } from "../registry/types.js";
 import { isAlreadyApplied, applySettings } from "../settings.js";
 
@@ -37,45 +35,18 @@ export async function applySettingsAgent(agent: SettingsAgentDef): Promise<void>
   }
   console.log();
 
-  // Filter to unapplied targets
+  // Auto-apply all unapplied targets without confirmation
   const unapplied = statuses.filter((s) => !s.applied);
 
-  let target;
-  if (unapplied.length === 1) {
-    target = unapplied[0].target;
-  } else {
-    // Let user pick which target to apply
-    const chosen = await select({
-      message: "Select a target to apply:",
-      choices: unapplied.map((s) => ({
-        name: s.target.description ?? s.target.kind,
-        value: s.target,
-      })),
-    });
-    target = chosen;
-  }
-
-  const label = target.description ?? target.kind;
-  const ok = await confirm({
-    message: `Apply settings to ${label}?`,
-    default: true,
-  });
-
-  if (!ok) {
-    console.log(chalk.dim("Cancelled."));
-    return;
-  }
-
-  try {
-    applySettings(target);
-    console.log(chalk.green(`\n✓ Applied settings to ${label}`));
-
-    if (target.kind === "sqlite") {
-      console.log(chalk.yellow("\nRestart the application for changes to take effect."));
+  for (const s of unapplied) {
+    const label = s.target.description ?? s.target.kind;
+    try {
+      applySettings(s.target);
+      console.log(chalk.green(`  ✓ Applied: ${label}`));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(chalk.red(`  ✗ Failed: ${label} — ${msg}`));
+      process.exitCode = 1;
     }
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error(chalk.red(`\nFailed to apply settings: ${msg}`));
-    process.exitCode = 1;
   }
 }
