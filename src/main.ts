@@ -7,6 +7,7 @@ import { editAgentCommand } from "./commands/edit.js";
 import { removeAgentCommand } from "./commands/remove.js";
 import { selectAgent } from "./commands/select.js";
 import { showFade } from "./ui/fade.js";
+import { extractDirectAgentInvocation } from "./argv.js";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../package.json");
@@ -74,7 +75,17 @@ const args = process.argv.slice(2);
 const isTopLevelHelp = args.length <= 1 && (args.includes("--help") || args.includes("-h"));
 if (isTopLevelHelp) await showFade();
 
-program.parseAsync().catch((err) => {
+const directInvocation = extractDirectAgentInvocation(args);
+
+const run = async () => {
+  if (directInvocation) {
+    await runAgent(directInvocation.cmd, directInvocation.extraArgs);
+    return;
+  }
+  await program.parseAsync();
+};
+
+run().catch((err) => {
   if (err?.name === "ExitPromptError") {
     process.exit(130);
   }
