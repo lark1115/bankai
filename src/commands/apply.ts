@@ -2,7 +2,8 @@ import chalk from "chalk";
 import type { SettingsAgentDef } from "../registry/types.js";
 import { isAlreadyApplied, applySettings } from "../settings.js";
 
-export async function applySettingsAgent(agent: SettingsAgentDef): Promise<void> {
+export async function applySettingsAgent(agent: SettingsAgentDef): Promise<boolean> {
+  let anyFailed = false;
   const name = agent.displayName ?? agent.cmd;
   console.log(chalk.bold.cyan(`# ${name}`));
   console.log(chalk.dim("This agent uses settings files instead of CLI flags.\n"));
@@ -21,7 +22,7 @@ export async function applySettingsAgent(agent: SettingsAgentDef): Promise<void>
     for (const s of statuses) {
       console.log(chalk.green(`  ✓ ${s.target.description ?? s.target.kind}`));
     }
-    return;
+    return false;
   }
 
   // Show status of each target
@@ -46,6 +47,8 @@ export async function applySettingsAgent(agent: SettingsAgentDef): Promise<void>
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error(chalk.yellow(`  ⚠ Failed: ${label} — ${msg} (continuing anyway)`));
+      anyFailed = true;
     }
   }
+  return anyFailed;
 }

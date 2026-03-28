@@ -36,14 +36,19 @@ export function deepMerge(
         overVal as Record<string, unknown>,
       );
     } else if (Array.isArray(baseVal) && Array.isArray(overVal)) {
-      // Union-merge arrays (deduplicated) to preserve existing entries
-      const merged = [...baseVal];
-      for (const item of overVal) {
-        if (!merged.some((existing) => JSON.stringify(existing) === JSON.stringify(item))) {
-          merged.push(item);
+      // Empty overlay array = explicit "clear" intent (e.g., deny:[])
+      // Non-empty overlay = union-merge (deduplicated) to preserve existing entries
+      if (overVal.length === 0) {
+        result[key] = [];
+      } else {
+        const merged = [...baseVal];
+        for (const item of overVal) {
+          if (!merged.some((existing) => JSON.stringify(existing) === JSON.stringify(item))) {
+            merged.push(item);
+          }
         }
+        result[key] = merged;
       }
-      result[key] = merged;
     } else {
       result[key] = overVal;
     }

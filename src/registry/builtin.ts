@@ -29,7 +29,7 @@ export const builtinAgents: AgentDef[] = [
             },
           },
         },
-        description: "Global (~/.claude/settings.json) — sandbox /tmp write access",
+        description: "Global (~/.claude/settings.json) — sandbox temp-dir write access",
       },
     ],
   },

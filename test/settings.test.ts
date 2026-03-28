@@ -48,6 +48,13 @@ describe("deepMerge", () => {
     const overlay = { a: 2 };
     expect(deepMerge(base, overlay)).toEqual({ a: 2 });
   });
+
+  it("empty array overlay clears base array (deny:[] intent)", () => {
+    const base = { permissions: { deny: ["something", "else"] } };
+    const overlay = { permissions: { deny: [] } };
+    const result = deepMerge(base, overlay);
+    expect((result.permissions as Record<string, unknown>).deny).toEqual([]);
+  });
 });
 
 describe("isDeepSubset", () => {
