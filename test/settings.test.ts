@@ -36,11 +36,13 @@ describe("deepMerge", () => {
     });
   });
 
-  it("does not override sandbox.enabled if already set to false", () => {
-    const base = { sandbox: { enabled: false, filesystem: { allowWrite: ["/other"] } } };
-    const overlay = { sandbox: { filesystem: { allowWrite: ["/tmp"] } } };
+  it("merges sandbox.enabled into existing settings", () => {
+    const base = { sandbox: { filesystem: { allowWrite: ["/other"] } } };
+    const overlay = { sandbox: { enabled: false } };
     const result = deepMerge(base, overlay);
-    expect((result.sandbox as Record<string, unknown>).enabled).toBe(false);
+    const sandbox = result.sandbox as Record<string, unknown>;
+    expect(sandbox.enabled).toBe(false);
+    expect(sandbox.filesystem).toEqual({ allowWrite: ["/other"] });
   });
 
   it("replaces scalar values", () => {

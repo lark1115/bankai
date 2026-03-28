@@ -1,15 +1,4 @@
-import os from "node:os";
 import type { AgentDef } from "./types.js";
-
-function claudeSandboxAllowWrite(): string[] {
-  const paths = ["/tmp"];
-  const tmpdir = os.tmpdir();
-  // macOS $TMPDIR resolves to /private/var/folders/... — include it if different from /tmp
-  if (tmpdir !== "/tmp") {
-    paths.push(tmpdir);
-  }
-  return paths;
-}
 
 export const builtinAgents: AgentDef[] = [
   {
@@ -24,12 +13,10 @@ export const builtinAgents: AgentDef[] = [
         filePath: "~/.claude/settings.json",
         merge: {
           sandbox: {
-            filesystem: {
-              allowWrite: claudeSandboxAllowWrite(),
-            },
+            enabled: false,
           },
         },
-        description: "Global (~/.claude/settings.json) — sandbox temp-dir write access",
+        description: "Global (~/.claude/settings.json) — disable sandbox",
       },
     ],
   },
