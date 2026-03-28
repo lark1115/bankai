@@ -66,10 +66,10 @@ export async function runAgent(cmd: string, extraArgs: string[] = []): Promise<v
 
   if (agent.type === "settings") {
     if (agent.cmd === "cursor-agent") ensureCursorAgentTrust();
-    await applySettingsAgent(agent);
+    const settingsFailed = await applySettingsAgent(agent);
     const line = agent.lines?.[0] ?? agent.cmd;
     const code = await execAgent(line, extraArgs);
-    process.exitCode = code;
+    process.exitCode = code || (settingsFailed ? 1 : 0);
   } else {
     if (agent.cmd === "codex") ensureCodexTrust();
     const line = agent.lines[0];
