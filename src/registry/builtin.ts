@@ -2,10 +2,23 @@ import type { AgentDef } from "./types.js";
 
 export const builtinAgents: AgentDef[] = [
   {
-    type: "cli",
+    type: "settings",
     cmd: "claude",
     displayName: "Claude Code",
     lines: ["claude --dangerously-skip-permissions"],
+    targets: [
+      {
+        kind: "json",
+        scope: "global",
+        filePath: "~/.claude/settings.json",
+        merge: {
+          sandbox: {
+            enabled: false,
+          },
+        },
+        description: "Global (~/.claude/settings.json) — disable sandbox",
+      },
+    ],
   },
   {
     type: "cli",
