@@ -1,11 +1,37 @@
+import os from "node:os";
 import type { AgentDef } from "./types.js";
+
+function claudeSandboxAllowWrite(): string[] {
+  const paths = ["/tmp"];
+  const tmpdir = os.tmpdir();
+  // macOS $TMPDIR resolves to /private/var/folders/... — include it if different from /tmp
+  if (tmpdir !== "/tmp") {
+    paths.push(tmpdir);
+  }
+  return paths;
+}
 
 export const builtinAgents: AgentDef[] = [
   {
-    type: "cli",
+    type: "settings",
     cmd: "claude",
     displayName: "Claude Code",
     lines: ["claude --dangerously-skip-permissions"],
+    targets: [
+      {
+        kind: "json",
+        scope: "global",
+        filePath: "~/.claude/settings.json",
+        merge: {
+          sandbox: {
+            filesystem: {
+              allowWrite: claudeSandboxAllowWrite(),
+            },
+          },
+        },
+        description: "Global (~/.claude/settings.json) — sandbox /tmp write access",
+      },
+    ],
   },
   {
     type: "cli",

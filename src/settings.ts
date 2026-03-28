@@ -35,6 +35,15 @@ export function deepMerge(
         baseVal as Record<string, unknown>,
         overVal as Record<string, unknown>,
       );
+    } else if (Array.isArray(baseVal) && Array.isArray(overVal)) {
+      // Union-merge arrays (deduplicated) to preserve existing entries
+      const merged = [...baseVal];
+      for (const item of overVal) {
+        if (!merged.some((existing) => JSON.stringify(existing) === JSON.stringify(item))) {
+          merged.push(item);
+        }
+      }
+      result[key] = merged;
     } else {
       result[key] = overVal;
     }
@@ -64,8 +73,10 @@ export function isDeepSubset(
   }
 
   if (Array.isArray(needle) && Array.isArray(haystack)) {
-    if (needle.length !== haystack.length) return false;
-    return needle.every((item, i) => isDeepSubset(haystack[i], item));
+    // Check that every element in needle exists somewhere in haystack (superset check)
+    return needle.every((needleItem) =>
+      haystack.some((haystackItem) => isDeepSubset(haystackItem, needleItem)),
+    );
   }
 
   return JSON.stringify(haystack) === JSON.stringify(needle);

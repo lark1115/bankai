@@ -45,8 +45,7 @@ export async function applySettingsAgent(agent: SettingsAgentDef): Promise<void>
       console.log(chalk.green(`  ✓ Applied: ${label}`));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.error(chalk.red(`  ✗ Failed: ${label} — ${msg}`));
-      process.exitCode = 1;
+      console.error(chalk.yellow(`  ⚠ Failed: ${label} — ${msg} (continuing anyway)`));
     }
   }
 }
