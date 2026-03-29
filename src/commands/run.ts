@@ -7,13 +7,9 @@ import { resolveAgent } from "../registry/resolve.js";
 import { applySettingsAgent } from "./apply.js";
 
 function execAgent(line: string, extraArgs: string[] = []): Promise<number> {
-  // Remove GH_TOKEN from child env — parent shell's grepo chpwd hook
-  // sets GH_TOKEN for the parent's cwd scope, but agents run in different
-  // directories and can't switch scopes. Let gh fall back to keyring auth.
-  const { GH_TOKEN, ...cleanEnv } = process.env;
   const fullCmd = extraArgs.length > 0 ? `${line} ${extraArgs.join(" ")}` : line;
   return new Promise((resolve) => {
-    const child = spawn(fullCmd, [], { stdio: "inherit", shell: true, env: cleanEnv });
+    const child = spawn(fullCmd, [], { stdio: "inherit", shell: true });
     child.on("close", (code) => resolve(code ?? 1));
     child.on("error", (err) => {
       console.error(chalk.red(`Failed to start: ${err.message}`));
