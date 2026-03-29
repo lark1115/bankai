@@ -17,7 +17,7 @@ describe("isInstalled", () => {
   it("returns true when command exists", () => {
     mockedSpawnSync.mockReturnValue({ status: 0 } as any);
     expect(isInstalled("node")).toBe(true);
-    expect(mockedSpawnSync).toHaveBeenCalledWith("command", ["-v", "node"], {
+    expect(mockedSpawnSync).toHaveBeenCalledWith("command -v node", [], {
       shell: true,
       stdio: "ignore",
     });
@@ -35,8 +35,9 @@ describe("filterInstalled", () => {
   });
 
   it("filters to only installed agents", () => {
-    mockedSpawnSync.mockImplementation((_cmd, args) => {
-      const name = (args as string[])[1];
+    mockedSpawnSync.mockImplementation((cmd) => {
+      const match = (cmd as string).match(/command -v (.+)/);
+      const name = match?.[1] ?? "";
       return { status: name === "yes-cmd" ? 0 : 1 } as any;
     });
 
