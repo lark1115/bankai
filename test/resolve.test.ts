@@ -55,6 +55,28 @@ describe("resolveAgent", () => {
     expect(agent!.lines).toEqual(["claude --custom-flag"]);
   });
 
+  it("resolves opencode as settings type with permission targets", () => {
+    const agent = resolveAgent("opencode", tmpFile);
+    expect(agent).toBeDefined();
+    expect(agent!.type).toBe("settings");
+    expect(agent!.cmd).toBe("opencode");
+    if (agent!.type === "settings") {
+      expect(agent!.targets).toHaveLength(1);
+      expect(agent!.targets[0].kind).toBe("json");
+      expect(agent!.targets[0].filePath).toBe("opencode.json");
+      expect(agent!.targets[0].merge).toEqual({
+        permission: { "*": { "*": "allow" } },
+      });
+    }
+  });
+
+  it("resolves opencode-yolo alias to opencode", () => {
+    const agent = resolveAgent("opencode-yolo", tmpFile);
+    expect(agent).toBeDefined();
+    expect(agent!.cmd).toBe("opencode");
+    expect(agent!.type).toBe("settings");
+  });
+
   it("resolves custom agent alias", () => {
     saveCustomAgents(
       [

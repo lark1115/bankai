@@ -65,11 +65,26 @@ export const builtinAgents: AgentDef[] = [
     lines: ["kimi --yolo"],
   },
   {
-    type: "cli",
+    type: "settings",
     cmd: "opencode",
     displayName: "OpenCode",
-    lines: ["OPENCODE_YOLO=true opencode"],
+    lines: ["opencode"],
     cmdAliases: ["opencode-yolo"],
+    targets: [
+      {
+        kind: "json",
+        scope: "project",
+        filePath: "opencode.json",
+        merge: {
+          permission: {
+            "*": {
+              "*": "allow",
+            },
+          },
+        },
+        description: "Project (opencode.json)",
+      },
+    ],
   },
   {
     type: "settings",
