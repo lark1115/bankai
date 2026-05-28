@@ -79,10 +79,11 @@ bankai agents --installed
 
 ### Settings Agents (config file / DB modification)
 
-| Agent            | Target                                           | Description                                       |
-| ---------------- | ------------------------------------------------ | ------------------------------------------------- |
-| Cursor Agent CLI | `.cursor/cli.json` / `~/.cursor/cli-config.json` | Writes permission allow-list for Cursor Agent CLI |
-| Cursor IDE       | SQLite DB (`state.vscdb`)                        | Applies settings below, then launches Cursor      |
+| Agent            | Target                                           | Description                                                            |
+| ---------------- | ------------------------------------------------ | --------------------------------------------------------------------- |
+| Claude Code (GLM)| `~/.claude/settings.json`                        | `bankai claude-glm` — Claude Code on Z.AI's GLM models (see [Env Vars](#env-vars)) |
+| Cursor Agent CLI | `.cursor/cli.json` / `~/.cursor/cli-config.json` | Writes permission allow-list for Cursor Agent CLI                     |
+| Cursor IDE       | SQLite DB (`state.vscdb`)                        | Applies settings below, then launches Cursor                          |
 
 #### Cursor IDE (`bankai cursor`)
 
@@ -118,6 +119,43 @@ bankai remove opencode
 ```
 
 Custom agents are stored in `~/.config/bankai/agents.json` (XDG-compliant, varies by OS).
+
+## Env Vars
+
+Any agent (built-in or custom) may define an `env` map that is injected into the
+agent process at launch — useful for pointing a tool at an alternate, API-compatible
+backend without editing its config files or maintaining shell aliases.
+
+Values support `${VAR}` interpolation against your current environment, so **secrets
+never need to be written into the agent definition**. A `${VAR}` that is unset
+resolves to an empty string and prints a warning. Literal values pass through unchanged.
+
+### Claude Code on GLM (Z.AI)
+
+`bankai claude-glm` launches Claude Code against [Z.AI's Anthropic-compatible
+endpoint](https://docs.z.ai/devpack/tool/claude), mapping the Claude tiers to GLM models:
+
+```jsonc
+{
+  "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+  "ANTHROPIC_AUTH_TOKEN": "${ZAI_API_KEY}", // read from your shell, not stored here
+  "API_TIMEOUT_MS": "3000000",
+  "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
+  "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5-turbo",
+  "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.1"
+}
+```
+
+Set your key once, then run:
+
+```bash
+export ZAI_API_KEY="your-z.ai-api-key"   # or source it from a secret manager
+bankai claude-glm
+```
+
+To use different models, register a custom agent that overrides `claude-glm` with your
+own `env` map. The same pattern works for any Anthropic-compatible provider (Kimi,
+DeepSeek, OpenRouter, a local proxy, …) — just change the base URL, token, and models.
 
 ## Development
 

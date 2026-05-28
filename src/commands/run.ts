@@ -4,12 +4,24 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 import chalk from "chalk";
 import { resolveAgent } from "../registry/resolve.js";
+import { resolveEnvVars } from "../env.js";
 import { applySettingsAgent } from "./apply.js";
 
-function execAgent(line: string, extraArgs: string[] = []): Promise<number> {
+function execAgent(
+  line: string,
+  extraArgs: string[] = [],
+  env?: Record<string, string>,
+): Promise<number> {
   const fullCmd = extraArgs.length > 0 ? `${line} ${extraArgs.join(" ")}` : line;
+  const resolvedEnv = resolveEnvVars(env);
   return new Promise((resolve) => {
-    const child = spawn(fullCmd, [], { stdio: "inherit", shell: true });
+    const child = spawn(fullCmd, [], {
+      stdio: "inherit",
+      shell: true,
+      // Inherit the parent env, then overlay the agent's resolved vars.
+      // Omitting `env` entirely (no agent env) keeps the default inheritance.
+      ...(resolvedEnv ? { env: { ...process.env, ...resolvedEnv } } : {}),
+    });
     child.on("close", (code) => resolve(code ?? 1));
     child.on("error", (err) => {
       console.error(chalk.red(`Failed to start: ${err.message}`));
@@ -64,12 +76,12 @@ export async function runAgent(cmd: string, extraArgs: string[] = []): Promise<v
     if (agent.cmd === "cursor-agent") ensureCursorAgentTrust();
     const settingsFailed = await applySettingsAgent(agent);
     const line = agent.lines?.[0] ?? agent.cmd;
-    const code = await execAgent(line, extraArgs);
+    const code = await execAgent(line, extraArgs, agent.env);
     process.exitCode = code || (settingsFailed ? 1 : 0);
   } else {
     if (agent.cmd === "codex") ensureCodexTrust();
     const line = agent.lines[0];
-    const code = await execAgent(line, extraArgs);
+    const code = await execAgent(line, extraArgs, agent.env);
     process.exitCode = code;
   }
 }
