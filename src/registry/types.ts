@@ -8,6 +8,9 @@ export const CliAgentDefSchema = z.object({
   displayName: z.string().optional(),
   lines: z.array(z.string().min(1)).min(1),
   cmdAliases: z.array(z.string().min(1)).optional(),
+  // Extra env vars injected into the agent process at launch. Values may
+  // reference existing env vars via ${VAR} so secrets stay out of this file.
+  env: z.record(z.string()).optional(),
 });
 
 export type CliAgentDef = z.infer<typeof CliAgentDefSchema>;
@@ -59,6 +62,8 @@ export const SettingsAgentDefSchema = z.object({
   cmdAliases: z.array(z.string().min(1)).optional(),
   targets: z.array(SettingsTargetSchema).min(1),
   lines: z.array(z.string().min(1)).optional(),
+  // See CliAgentDefSchema.env — same ${VAR}-interpolated launch env.
+  env: z.record(z.string()).optional(),
 });
 
 export type SettingsAgentDef = z.infer<typeof SettingsAgentDefSchema>;
