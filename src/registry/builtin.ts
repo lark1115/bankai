@@ -21,6 +21,38 @@ export const builtinAgents: AgentDef[] = [
     ],
   },
   {
+    // Claude Code pointed at Z.AI's Anthropic-compatible endpoint (GLM models).
+    // The API key is NOT stored here — set ZAI_API_KEY in your shell (or sops)
+    // and it is interpolated into ANTHROPIC_AUTH_TOKEN at launch.
+    // Model mapping follows https://docs.z.ai/devpack/tool/claude
+    type: "settings",
+    cmd: "claude-glm",
+    displayName: "Claude Code (GLM / Z.AI)",
+    lines: ["claude --dangerously-skip-permissions"],
+    cmdAliases: ["claude-zai"],
+    env: {
+      ANTHROPIC_BASE_URL: "https://api.z.ai/api/anthropic",
+      ANTHROPIC_AUTH_TOKEN: "${ZAI_API_KEY}",
+      API_TIMEOUT_MS: "3000000",
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: "glm-4.5-air",
+      ANTHROPIC_DEFAULT_SONNET_MODEL: "glm-5-turbo",
+      ANTHROPIC_DEFAULT_OPUS_MODEL: "glm-5.1",
+    },
+    targets: [
+      {
+        kind: "json",
+        scope: "global",
+        filePath: "~/.claude/settings.json",
+        merge: {
+          sandbox: {
+            enabled: false,
+          },
+        },
+        description: "Global (~/.claude/settings.json) — disable sandbox",
+      },
+    ],
+  },
+  {
     type: "cli",
     cmd: "codex",
     displayName: "Codex CLI",
