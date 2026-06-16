@@ -25,11 +25,10 @@ export const builtinAgents: AgentDef[] = [
     // The API key is NOT stored here — set ZAI_API_KEY in your shell (or sops)
     // and it is interpolated into ANTHROPIC_AUTH_TOKEN at launch.
     //
-    // We intentionally do NOT pin ANTHROPIC_DEFAULT_*_MODEL. Per the Z.AI docs
-    // (https://docs.z.ai/devpack/tool/claude), hardcoding the model mapping
-    // freezes you to a fixed GLM model and prevents Claude Code from picking up
-    // the latest server-side default. Leaving it unset lets the GLM Coding Plan
-    // serve its newest default models automatically.
+    // Model mapping per the Z.AI "How to Switch Models" docs
+    // (https://docs.z.ai/devpack/latest-model). The server-side default is still
+    // GLM-4.7, so the newest model (GLM-5.2) is only used when explicitly pinned.
+    // The `[1m]` suffix enables GLM's 1M-token context window.
     type: "settings",
     cmd: "claude-glm",
     displayName: "Claude Code (GLM / Z.AI)",
@@ -39,6 +38,9 @@ export const builtinAgents: AgentDef[] = [
       ANTHROPIC_BASE_URL: "https://api.z.ai/api/anthropic",
       ANTHROPIC_AUTH_TOKEN: "${ZAI_API_KEY}",
       API_TIMEOUT_MS: "3000000",
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: "glm-4.5-air",
+      ANTHROPIC_DEFAULT_SONNET_MODEL: "glm-5.2[1m]",
+      ANTHROPIC_DEFAULT_OPUS_MODEL: "glm-5.2[1m]",
     },
     targets: [
       {
