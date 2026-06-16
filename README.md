@@ -141,8 +141,8 @@ endpoint](https://docs.z.ai/devpack/tool/claude), mapping the Claude tiers to GL
   "ANTHROPIC_AUTH_TOKEN": "${ZAI_API_KEY}", // read from your shell, not stored here
   "API_TIMEOUT_MS": "3000000",
   "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
-  "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5-turbo",
-  "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.1"
+  "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.2[1m]",
+  "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.2[1m]"
 }
 ```
 
