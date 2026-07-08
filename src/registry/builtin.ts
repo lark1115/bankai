@@ -21,38 +21,49 @@ export const builtinAgents: AgentDef[] = [
     ],
   },
   {
-    // Claude Code pointed at Z.AI's Anthropic-compatible endpoint (GLM models).
-    // The API key is NOT stored here — set ZAI_API_KEY in your shell (or sops)
-    // and it is interpolated into ANTHROPIC_AUTH_TOKEN at launch.
+    // OpenCode pointed at Z.AI's GLM Coding Plan endpoint (OpenAI-compatible,
+    // provider id "zai-coding-plan" per https://models.dev). The API key is
+    // NOT stored here — set ZAI_API_KEY in your shell (or sops); opencode
+    // resolves the {env:ZAI_API_KEY} placeholder from the environment at
+    // runtime.
     //
-    // Model mapping per the Z.AI "How to Switch Models" docs
-    // (https://docs.z.ai/devpack/latest-model). The server-side default is still
-    // GLM-4.7, so the newest model (GLM-5.2) is only used when explicitly pinned.
-    // The `[1m]` suffix enables GLM's 1M-token context window.
+    // The model is pinned per launch via --model rather than written into
+    // config, so plain `opencode` runs in the same project keep their own
+    // default model.
     type: "settings",
-    cmd: "claude-glm",
-    displayName: "Claude Code (GLM / Z.AI)",
-    lines: ["claude --dangerously-skip-permissions"],
-    cmdAliases: ["claude-zai"],
-    env: {
-      ANTHROPIC_BASE_URL: "https://api.z.ai/api/anthropic",
-      ANTHROPIC_AUTH_TOKEN: "${ZAI_API_KEY}",
-      API_TIMEOUT_MS: "3000000",
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: "glm-4.5-air",
-      ANTHROPIC_DEFAULT_SONNET_MODEL: "glm-5.2[1m]",
-      ANTHROPIC_DEFAULT_OPUS_MODEL: "glm-5.2[1m]",
-    },
+    cmd: "opencode-glm",
+    displayName: "OpenCode (GLM / Z.AI)",
+    lines: ["opencode --model zai-coding-plan/glm-5.2"],
+    cmdAliases: ["claude-glm", "claude-zai"],
     targets: [
       {
         kind: "json",
         scope: "global",
-        filePath: "~/.claude/settings.json",
+        filePath: "~/.config/opencode/opencode.json",
         merge: {
-          sandbox: {
-            enabled: false,
+          provider: {
+            "zai-coding-plan": {
+              options: {
+                apiKey: "{env:ZAI_API_KEY}",
+              },
+            },
           },
         },
-        description: "Global (~/.claude/settings.json) — disable sandbox",
+        description:
+          "Global (~/.config/opencode/opencode.json) — Z.AI provider, key read from env",
+      },
+      {
+        kind: "json",
+        scope: "project",
+        filePath: "opencode.json",
+        merge: {
+          permission: {
+            "*": {
+              "*": "allow",
+            },
+          },
+        },
+        description: "Project (opencode.json)",
       },
     ],
   },

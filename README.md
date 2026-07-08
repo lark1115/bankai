@@ -81,7 +81,7 @@ bankai agents --installed
 
 | Agent            | Target                                           | Description                                                            |
 | ---------------- | ------------------------------------------------ | --------------------------------------------------------------------- |
-| Claude Code (GLM)| `~/.claude/settings.json`                        | `bankai claude-glm` — Claude Code on Z.AI's GLM models (see [Env Vars](#env-vars)) |
+| OpenCode (GLM)   | `~/.config/opencode/opencode.json` / `opencode.json` | `bankai opencode-glm` — OpenCode on Z.AI's GLM models (see [Env Vars](#env-vars)) |
 | Cursor Agent CLI | `.cursor/cli.json` / `~/.cursor/cli-config.json` | Writes permission allow-list for Cursor Agent CLI                     |
 | Cursor IDE       | SQLite DB (`state.vscdb`)                        | Applies settings below, then launches Cursor                          |
 
@@ -130,19 +130,27 @@ Values support `${VAR}` interpolation against your current environment, so **sec
 never need to be written into the agent definition**. A `${VAR}` that is unset
 resolves to an empty string and prints a warning. Literal values pass through unchanged.
 
-### Claude Code on GLM (Z.AI)
+### OpenCode on GLM (Z.AI)
 
-`bankai claude-glm` launches Claude Code against [Z.AI's Anthropic-compatible
-endpoint](https://docs.z.ai/devpack/tool/claude), mapping the Claude tiers to GLM models:
+`bankai opencode-glm` launches [OpenCode](https://opencode.ai) against Z.AI's GLM
+Coding Plan endpoint (provider `zai-coding-plan`, see [models.dev](https://models.dev)),
+pinning the model per launch:
+
+```bash
+opencode --model zai-coding-plan/glm-5.2
+```
+
+The provider is configured in your global OpenCode config
+(`~/.config/opencode/opencode.json`) with an env placeholder — **the key itself is
+never written to disk**; OpenCode resolves it from your shell at runtime:
 
 ```jsonc
 {
-  "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
-  "ANTHROPIC_AUTH_TOKEN": "${ZAI_API_KEY}", // read from your shell, not stored here
-  "API_TIMEOUT_MS": "3000000",
-  "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
-  "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.2[1m]",
-  "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.2[1m]"
+  "provider": {
+    "zai-coding-plan": {
+      "options": { "apiKey": "{env:ZAI_API_KEY}" }
+    }
+  }
 }
 ```
 
@@ -150,12 +158,12 @@ Set your key once, then run:
 
 ```bash
 export ZAI_API_KEY="your-z.ai-api-key"   # or source it from a secret manager
-bankai claude-glm
+bankai opencode-glm                      # aliases: claude-glm, claude-zai
 ```
 
-To use different models, register a custom agent that overrides `claude-glm` with your
-own `env` map. The same pattern works for any Anthropic-compatible provider (Kimi,
-DeepSeek, OpenRouter, a local proxy, …) — just change the base URL, token, and models.
+Because the model is passed via `--model` (not written into config), plain `opencode`
+runs in the same project keep their own default model. To use a different GLM model,
+register a custom agent that overrides `opencode-glm` with your own launch line.
 
 ## Development
 
