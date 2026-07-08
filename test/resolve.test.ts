@@ -70,6 +70,45 @@ describe("resolveAgent", () => {
     }
   });
 
+  it("resolves opencode-glm as settings type launching opencode with GLM", () => {
+    const agent = resolveAgent("opencode-glm", tmpFile);
+    expect(agent).toBeDefined();
+    expect(agent!.type).toBe("settings");
+    expect(agent!.cmd).toBe("opencode-glm");
+    expect(agent!.lines).toEqual(["opencode --model zai-coding-plan/glm-5.2"]);
+    if (agent!.type === "settings") {
+      const global = agent!.targets.find((t) => t.scope === "global");
+      expect(global).toBeDefined();
+      expect(global!.kind).toBe("json");
+      if (global!.kind === "json") {
+        expect(global!.filePath).toBe("~/.config/opencode/opencode.json");
+        expect(global!.merge).toEqual({
+          provider: {
+            "zai-coding-plan": {
+              options: { apiKey: "{env:ZAI_API_KEY}" },
+            },
+          },
+        });
+      }
+      const project = agent!.targets.find((t) => t.scope === "project");
+      expect(project).toBeDefined();
+      if (project!.kind === "json") {
+        expect(project!.filePath).toBe("opencode.json");
+        expect(project!.merge).toEqual({
+          permission: { "*": { "*": "allow" } },
+        });
+      }
+    }
+  });
+
+  it("resolves claude-glm and claude-zai aliases to opencode-glm", () => {
+    for (const alias of ["claude-glm", "claude-zai"]) {
+      const agent = resolveAgent(alias, tmpFile);
+      expect(agent).toBeDefined();
+      expect(agent!.cmd).toBe("opencode-glm");
+    }
+  });
+
   it("resolves opencode-yolo alias to opencode", () => {
     const agent = resolveAgent("opencode-yolo", tmpFile);
     expect(agent).toBeDefined();
