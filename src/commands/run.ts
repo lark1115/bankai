@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync, appendFileSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { homedir } from "node:os";
 import chalk from "chalk";
 import { resolveAgent } from "../registry/resolve.js";
@@ -47,15 +47,16 @@ function ensureCursorAgentTrust(): void {
 }
 
 /** Workaround for codex-cli trust prompt regression (openai/codex#14345) */
-function ensureCodexTrust(): void {
-  const configPath = join(homedir(), ".codex", "config.toml");
+export function ensureCodexTrust(codexHome = process.env.CODEX_HOME): void {
+  const configDir = resolve(codexHome || join(homedir(), ".codex"));
+  const configPath = join(configDir, "config.toml");
   const cwd = process.cwd();
   const key = `[projects."${cwd}"]`;
   try {
     const content = readFileSync(configPath, "utf-8");
     if (content.match(new RegExp(`^\\[projects\\."${cwd.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"\\]`, "m"))) return;
   } catch {
-    mkdirSync(join(homedir(), ".codex"), { recursive: true });
+    mkdirSync(configDir, { recursive: true });
   }
   appendFileSync(configPath, `\n${key}\ntrust_level = "trusted"\n`);
 }
@@ -79,7 +80,7 @@ export async function runAgent(cmd: string, extraArgs: string[] = []): Promise<v
     const code = await execAgent(line, extraArgs, agent.env);
     process.exitCode = code || (settingsFailed ? 1 : 0);
   } else {
-    if (agent.cmd === "codex") ensureCodexTrust();
+    if (agent.cmd === "codex") ensureCodexTrust(resolveEnvVars(agent.env)?.CODEX_HOME);
     const line = agent.lines[0];
     const code = await execAgent(line, extraArgs, agent.env);
     process.exitCode = code;
