@@ -81,7 +81,6 @@ bankai agents --installed
 
 | Agent            | Target                                           | Description                                                            |
 | ---------------- | ------------------------------------------------ | --------------------------------------------------------------------- |
-| OpenCode (GLM)   | `~/.config/opencode/opencode.json` / `opencode.json` | `bankai opencode-glm` — OpenCode on Z.AI's GLM models (see [Env Vars](#env-vars)) |
 | Cursor Agent CLI | `.cursor/cli.json` / `~/.cursor/cli-config.json` | Writes permission allow-list for Cursor Agent CLI                     |
 | Cursor IDE       | SQLite DB (`state.vscdb`)                        | Applies settings below, then launches Cursor                          |
 
@@ -130,40 +129,23 @@ Values support `${VAR}` interpolation against your current environment, so **sec
 never need to be written into the agent definition**. A `${VAR}` that is unset
 resolves to an empty string and prints a warning. Literal values pass through unchanged.
 
-### OpenCode on GLM (Z.AI)
+### OpenCode Console (formerly Zen)
 
-`bankai opencode-glm` launches [OpenCode](https://opencode.ai) against Z.AI's GLM
-Coding Plan endpoint (provider `zai-coding-plan`, see [models.dev](https://models.dev)),
-pinning the model per launch:
+OpenCode is optional and should only be selected when the requester explicitly
+asks for it. No Zen-specific builtin is wired in this release: a provider/model
+must not be inferred from an existing OpenCode config. The generic `opencode`
+builtin is unchanged and does not select or authenticate Console/Zen for you.
 
-```bash
-opencode --model zai-coding-plan/glm-5.2
-```
+The local CLI checked for this change was OpenCode v2.0.24. Its TUI supports
+`--auto` (auto-approve except explicit denies); `opencode run` supports
+`--model provider/model#variant` and `--agent`. Those model/agent flags are not
+listed by the v2 TUI help. Verify a dedicated persistent worker launch path and
+Console authentication before adding a Zen builtin. No real agent or paid model
+request was started for this change.
 
-The provider is configured in your global OpenCode config
-(`~/.config/opencode/opencode.json`) with an env placeholder — **the key itself is
-never written to disk**; OpenCode resolves it from your shell at runtime:
-
-```jsonc
-{
-  "provider": {
-    "zai-coding-plan": {
-      "options": { "apiKey": "{env:ZAI_API_KEY}" }
-    }
-  }
-}
-```
-
-Set your key once, then run:
-
-```bash
-export ZAI_API_KEY="your-z.ai-api-key"   # or source it from a secret manager
-bankai opencode-glm                      # aliases: claude-glm, claude-zai
-```
-
-Because the model is passed via `--model` (not written into config), plain `opencode`
-runs in the same project keep their own default model. To use a different GLM model,
-register a custom agent that overrides `opencode-glm` with your own launch line.
+See the official [Console model/auth guide](https://opencode.ai/v2/docs/console/models/),
+[V2 configuration](https://opencode.ai/v2/docs/config/), and
+[permissions](https://opencode.ai/v2/docs/permissions/).
 
 ## Development
 

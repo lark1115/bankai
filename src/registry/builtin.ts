@@ -21,53 +21,6 @@ export const builtinAgents: AgentDef[] = [
     ],
   },
   {
-    // OpenCode pointed at Z.AI's GLM Coding Plan endpoint (OpenAI-compatible,
-    // provider id "zai-coding-plan" per https://models.dev). The API key is
-    // NOT stored here — set ZAI_API_KEY in your shell (or sops); opencode
-    // resolves the {env:ZAI_API_KEY} placeholder from the environment at
-    // runtime.
-    //
-    // The model is pinned per launch via --model rather than written into
-    // config, so plain `opencode` runs in the same project keep their own
-    // default model.
-    type: "settings",
-    cmd: "opencode-glm",
-    displayName: "OpenCode (GLM / Z.AI)",
-    lines: ["opencode --model zai-coding-plan/glm-5.2"],
-    cmdAliases: ["claude-glm", "claude-zai"],
-    targets: [
-      {
-        kind: "json",
-        scope: "global",
-        filePath: "~/.config/opencode/opencode.json",
-        merge: {
-          provider: {
-            "zai-coding-plan": {
-              options: {
-                apiKey: "{env:ZAI_API_KEY}",
-              },
-            },
-          },
-        },
-        description:
-          "Global (~/.config/opencode/opencode.json) — Z.AI provider, key read from env",
-      },
-      {
-        kind: "json",
-        scope: "project",
-        filePath: "opencode.json",
-        merge: {
-          permission: {
-            "*": {
-              "*": "allow",
-            },
-          },
-        },
-        description: "Project (opencode.json)",
-      },
-    ],
-  },
-  {
     type: "cli",
     cmd: "codex",
     displayName: "Codex CLI",
