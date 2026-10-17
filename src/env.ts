@@ -5,7 +5,7 @@ import chalk from "chalk";
  * `${VAR}` references against a source environment (defaults to process.env).
  *
  * This keeps secrets (API tokens, etc.) out of agent definitions: a value like
- * `"${ZAI_API_KEY}"` is replaced at launch time with the value held in the
+ * `"${EXAMPLE_API_KEY}"` is replaced at launch time with the value held in the
  * shell environment. Literal values pass through unchanged. Missing references
  * resolve to an empty string and emit a warning so failures are diagnosable.
  */

@@ -18,8 +18,8 @@ describe("resolveEnvVars", () => {
 
   it("interpolates ${VAR} from the source environment", () => {
     const result = resolveEnvVars(
-      { ANTHROPIC_AUTH_TOKEN: "${ZAI_API_KEY}" },
-      { ZAI_API_KEY: "secret-123" },
+      { ANTHROPIC_AUTH_TOKEN: "${EXAMPLE_API_KEY}" },
+      { EXAMPLE_API_KEY: "secret-123" },
     );
     expect(result).toEqual({ ANTHROPIC_AUTH_TOKEN: "secret-123" });
   });
